@@ -1,0 +1,112 @@
+{% extends "layout2.html" %}
+ {% block body %}
+<header class="masthead" style="background-image: url(' {{url_for('static',filename ='img/h.jpg')}}  ')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>{{user.username}} 's Posts</h1>
+              <h3>({{posts.total}} Posts)</h3>
+            <span class=({{posts.total}})></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+<div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-md-15 mx-auto">
+
+          <!--to give alert messages-->
+          {%with messages = get_flashed_messages(with_categories=true)%}
+        {%if messages %}
+            {% for category,message in messages %}
+                <div class="alert alert-{{ category}} ">
+
+                    {{ message }}
+                    </div>
+                    {% endfor%}
+                    {%endif%}
+        {%endwith%}
+
+    {% for post in posts.items%}
+        <article class="media content-section">
+            <img class="img-thumbnail account-imgs" src="{{url_for('static',filename='profile_pics/'+post.author.image_file)}}">
+            <a class="mr-4" href="{{url_for('user_post',username=post.author.username)}}"></a>
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ post.author.username }}</a>
+          <small class="text-muted">{{ post.date_posted.strftime('%m/%d/%Y, %H:%M:%S') }}</small>
+        </div>
+        <h2><a class="article-title" href="{{url_for('post',post_id=post.id)}}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+      </div>
+    </article>
+{% endfor%}
+
+          {%for page_num in posts.iter_pages(left_edge=2,right_edge=2,left_current=1,right_current=2)%}
+          {%if page_num%}
+          {%if posts.page==page_num%}
+          <a class ="btn btn-info mb-4" href="{{ url_for('user_post',username=user.username,page=page_num)}}">{{page_num}}</a>
+{%else%}
+                    <a class ="btn btn-outline-info mb-4" href="{{ url_for('user_post',username=user.username,page=page_num)}}">{{page_num}}</a>
+
+          {%endif%}
+          {%else%}
+          ....
+          {%endif%}
+{%endfor%}
+      </div>
+
+    </div>
+</div>
+{% endblock %}
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--  <footer>-->
+<!--    <div class="container">-->
+<!--      <div class="row">-->
+<!--        <div class="col-lg-8 col-md-10 mx-auto">-->
+<!--          <ul class="list-inline text-center">-->
+<!--            <li class="list-inline-item">-->
+<!--              <a href="" target="_blank">-->
+<!--                <span class="fa-stack fa-lg">-->
+<!--                  <i class="fas fa-circle fa-stack-2x"></i>-->
+<!--                  <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>-->
+<!--                </span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="list-inline-item">-->
+<!--              <a href="" target="_blank">-->
+<!--                <span class="fa-stack fa-lg">-->
+<!--                  <i class="fas fa-circle fa-stack-2x"></i>-->
+<!--                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>-->
+<!--                </span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="list-inline-item">-->
+<!--              <a href="" target="_blank">-->
+<!--                <span class="fa-stack fa-lg">-->
+<!--                  <i class="fas fa-circle fa-stack-2x"></i>-->
+<!--                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>-->
+<!--                </span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <p class="copyright text-muted">Copyright &copy; Flask Blog 2019</p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </footer>-->
+
+<!--  &lt;!&ndash; Bootstrap core JavaScript &ndash;&gt;-->
+<!--  <script src="{{ url_for('static',filename ='vendor/jquery/jquery.min.js')}}"></script>-->
+<!--  <script src="{{ url_for('static',filename ='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>-->
+
+<!--  &lt;!&ndash; Custom scripts for this template &ndash;&gt;-->
+<!--  <script src="{{ url_for('static',filename ='js/clean-blog.min.js')}}"></script>-->
+
+<!--</body>-->
+
+<!--</html>-->
+
